@@ -33,6 +33,10 @@ public class Baraja {
     }
     return mano;
   }
+  
+  public Carta agregarCarta(){
+      return mazo.remove(0);
+  }
 
   @Override
   public String toString() {

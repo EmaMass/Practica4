@@ -1,8 +1,10 @@
 emamass\practica4\Baraja.class
 emamass\practica4\FueraDeRangoException.class
+emamass\practica4\Jugador.class
 emamass\practica4\Practica4.class
 emamass\practica4\Carta.class
 emamass\practica4\Color.class
+emamass\practica4\Dado.class
 emamass\practica4\Test.class
 emamass\practica4\AplicacionDeCartas.class
 emamass\practica4\Figura.class
