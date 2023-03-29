@@ -82,6 +82,7 @@ public class AplicacionDeCartas {
                 caraDado = dado.girarDado();
                 System.out.println("Consigue "+caraDado+" cartas");
                 control.get(i).agregarCarta(mazo.get(contador), caraDado);
+                control.get(i).disminuirPuntaje();
             }
             if((i % 3) == 0 && i != 0){
                 contador += 1;
