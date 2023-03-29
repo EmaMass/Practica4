@@ -37,6 +37,10 @@ public class Baraja {
   public Carta agregarCarta(){
       return mazo.remove(0);
   }
+  
+  public void quitarCarta(Carta carta){
+      mazo.add(carta);
+  }
 
   @Override
   public String toString() {

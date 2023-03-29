@@ -12,9 +12,11 @@ import java.util.ArrayList;
 public class Jugador {
     ArrayList<Carta> mano;
     private int numJugador;
+    private int puntaje;
     public Jugador(ArrayList<Carta> cartas, int numJug){
         this.mano = cartas;
-        this.numJugador = numJug; 
+        this.numJugador = numJug;
+        this.puntaje = 0;
   }
     
     public ArrayList<Carta> regresarMano(){
@@ -25,6 +27,26 @@ public class Jugador {
         for(int i = 0; i < dado; i++){
          mano.add(baraja.agregarCarta());   
         }
+    }
+    
+    public void quitarCarta(Baraja baraja, int index){
+        baraja.quitarCarta(mano.remove(index-1));
+    }
+    
+    public Carta regresarCarta(int index){
+        return mano.get(index-1);
+    }
+    
+    public void aumentarPuntaje(int puntos){
+        this.puntaje += puntos;
+    }
+    
+    public void disminuirPuntaje(){
+        this.puntaje -= 3; 
+    }
+    
+    public int getPuntaje(){
+        return this.puntaje;
     }
     
     @Override
