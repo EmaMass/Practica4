@@ -45,6 +45,10 @@ public class Jugador {
         this.puntaje -= 3; 
     }
     
+    public boolean estaVacia(){
+        return this.mano.isEmpty();
+    }
+    
     public int getPuntaje(){
         return this.puntaje;
     }
