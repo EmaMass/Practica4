@@ -98,7 +98,7 @@ public class AplicacionDeCartas {
   public void compararCartas(){
      valorMax = Collections.max(cartasEnJuego);
      posicion = cartasEnJuego.indexOf(valorMax);
-     revisarVacio();
+     ganador = posicion; 
     for(int i = 0; i < control.size(); i++){
         if(valorMax == cartasEnJuego.get(i) && posicion != i){
             cartasIguales.add(i);
