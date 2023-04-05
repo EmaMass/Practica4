@@ -11,11 +11,13 @@ public class AplicacionDeCartas {
  private int ganador;
  private int puntos; 
  private int tempfix;
+ private int valorMax;
+ private int posicion; 
  ArrayList<Baraja> mazo;
  ArrayList<Jugador> control;
  ArrayList<Integer> cartasEnJuego;
  ArrayList<Integer> cartasIguales;
- ArrayList<Integer> cartasIgualesR;
+ ArrayList<Integer> cartasIgualesEmpate;
  ArrayList<Integer> puntosDeTodos;
  Dado dado;
  Carta temp;
@@ -25,7 +27,7 @@ public class AplicacionDeCartas {
     control = new ArrayList<>();
     cartasEnJuego = new ArrayList<>();
     cartasIguales = new ArrayList<>();
-    cartasIgualesR = new ArrayList<>();
+    cartasIgualesEmpate = new ArrayList<>();
     puntosDeTodos = new ArrayList<>();
     scn = new Scanner(System.in);
     dado = new Dado();
@@ -51,7 +53,7 @@ public class AplicacionDeCartas {
                 contador += 1;
             }
         }
-    for(int j = 8 /*Rondas*/; j < 10; j++){
+    for(int j = 0 /*Rondas*/; j < 10; j++){
         contador = 0;
         for(int i = 0; i < jugadores; i++){
             System.out.println("Jugador "+(i+1)+", decida que carta tirar: ");
@@ -65,28 +67,19 @@ public class AplicacionDeCartas {
             }
         }
         compararCartas();
-        System.out.println(cartasIgualesR);
-        if(!cartasIgualesR.isEmpty()){
+        if(!cartasIgualesEmpate.isEmpty()){
             System.out.println("Empate, se repartira 1 puntos entre los jugadores empatados");
-            for(Integer num : cartasIgualesR){
+            for(Integer num : cartasIgualesEmpate){
                 control.get(num).aumentarPuntaje(puntos);
             }
+            cartasIgualesEmpate.clear();
         } else{
             System.out.println("El ganador es el jugador "+(ganador+1)+" y recibira 2 puntos");
             control.get(ganador).aumentarPuntaje(puntos);
         }
         contador = 0;
-        for(int i = 0; i < jugadores; i++){
-            if(control.get(i).estaVacia() == true){
-                System.out.println("Jugador "+(i+1)+" no tiene cartas en su mano, girando dado para que tenga cartas, y se pierde 3 puntos");
-                caraDado = dado.girarDado();
-                System.out.println("Consigue "+caraDado+" cartas");
-                control.get(i).agregarCarta(mazo.get(contador), caraDado);
-                control.get(i).disminuirPuntaje();
-            }
-            if((i % 3) == 0 && i != 0){
-                contador += 1;
-            }
+        if(j != 9){
+        revisarVacio();
         }
     }
     compararPuntos();
@@ -104,67 +97,19 @@ public class AplicacionDeCartas {
   }
   
   public void compararCartas(){
-    int valorMax;
      valorMax = Collections.max(cartasEnJuego);
-    int posicion;
      posicion = cartasEnJuego.indexOf(valorMax);
-     System.out.println(valorMax);
-     System.out.println(posicion);
+     revisarVacio();
     for(int i = 0; i < control.size(); i++){
-        System.out.println(i);
         if(valorMax == cartasEnJuego.get(i) && posicion != i){
             cartasIguales.add(i);
         }
     }
-    System.out.println(cartasIguales);
     if(cartasIguales.isEmpty()){
-        System.out.println("Bien");
         ganador = posicion;
         puntos = 2;
     } else {
-        cartasEnJuego.clear();
-        System.out.println("Cartas iguales, jugador "+(posicion+1)+", seleccione otra carta a tirar: ");
-        System.out.println(control.get(posicion));
-        respuesta = scn.nextInt();
-        temp = (control.get(posicion).regresarCarta(respuesta));
-        cartasEnJuego.add(temp.getValor());
-        if(posicion >= 3){
-          contador = posicion/3; 
-        } else{
-          contador = 0;
-        }
-        control.get(posicion).quitarCarta(mazo.get(contador),respuesta);
-        for(Integer num : cartasIguales){
-            System.out.println("Jugador "+(num+1)+", seleccione otra carta a tirar: ");
-            System.out.println(control.get(num));
-            respuesta = scn.nextInt();
-            temp = (control.get(num).regresarCarta(respuesta));
-            cartasEnJuego.add(temp.getValor());
-            if(posicion >= 3){
-                contador = posicion/3; 
-            }else{
-                contador = 0;
-            }
-            control.get(num).quitarCarta(mazo.get(contador), respuesta);
-        }
-         valorMax = Collections.max(cartasEnJuego);
-         posicion = cartasEnJuego.indexOf(valorMax);
-        System.out.println(cartasIgualesR);
-        System.out.println(cartasIguales);
-        for(int i = 0; i < cartasIguales.size(); i++){
-            if((valorMax == cartasEnJuego.get(i)) && posicion != i){
-                puntos = 1;
-                //cartasIgualesR.add(cartasIguales.get(i)); Esto no agrega el valor al final de la lista. Entonces utilizo un int para conseguir el valor de iguales, y luego agregar a igualesR
-                tempfix = cartasIguales.get(i); //Tambien esto no funciona, y no se agrega al final de la lista cartasIgualesR
-                System.out.println(tempfix);
-                cartasIgualesR.add(tempfix);
-                System.out.println(cartasIgualesR);
-            }
-        }
-        //if(cartasIgualesR.isEmpty()){
-            ganador = posicion;
-            puntos = 2;
-        //}
+        casoEmpate();
     }
     cartasEnJuego.clear();
     cartasIguales.clear();
@@ -182,5 +127,74 @@ public class AplicacionDeCartas {
             cartasIguales.add(i);
         }
     }
+  }
+  
+  public void casoEmpate(){
+    cartasIgualesEmpate.clear();
+    cartasEnJuego.clear();
+    revisarVacio();
+    System.out.println("Empate");
+    System.out.println("Jugador "+(ganador+1)+", decida que carta tirar: ");
+    System.out.println(control.get(ganador));
+    respuesta = scn.nextInt();
+    temp = (control.get(ganador).regresarCarta(respuesta));
+    cartasEnJuego.add(temp.getValor());
+    if(ganador < 3){
+        contador = 0;
+    }
+    else {
+        contador = ganador/3;
+    }
+    control.get(ganador).quitarCarta(mazo.get(contador), respuesta);
+    for(Integer i: cartasIguales){
+            System.out.println("Jugador "+(i+1)+", decida que carta tirar: ");
+            System.out.println(control.get(i));
+            respuesta = scn.nextInt();
+            temp = (control.get(i).regresarCarta(respuesta));
+            cartasEnJuego.add(temp.getValor());
+            if(i < 3){
+                contador = 0;
+            }
+            else {
+                contador = i/3;
+            }
+            control.get(i).quitarCarta(mazo.get(contador), respuesta);
+        }
+     valorMax = Collections.max(cartasEnJuego);
+     posicion = cartasEnJuego.indexOf(valorMax);
+     if(posicion == 0){
+         posicion = ganador; 
+     } else {
+         posicion = cartasIguales.get(posicion-1);
+     }
+    for(int i = 0; i < cartasEnJuego.size(); i++){
+        System.out.println(i);
+        if(valorMax == cartasEnJuego.get(i) && posicion != i){
+            cartasIgualesEmpate.add(i);
+        }
+    }
+    if(cartasIgualesEmpate.isEmpty()){
+        ganador = posicion;
+        puntos = 2;
+    } else {
+        puntos = 1;
+        cartasIgualesEmpate.add(posicion);
+    }
+  }
+  
+  public void revisarVacio(){
+        contador = 0;
+        for(int i = 0; i < jugadores; i++){
+            if(control.get(i).estaVacia() == true){
+                System.out.println("Jugador "+(i+1)+" no tiene cartas en su mano, girando dado para que tenga cartas, y se pierde 3 puntos");
+                caraDado = dado.girarDado();
+                System.out.println("Consigue "+caraDado+" cartas");
+                control.get(i).agregarCarta(mazo.get(contador), caraDado);
+                control.get(i).disminuirPuntaje();
+            }
+            if((i % 3) == 0 && i != 0){
+                contador += 1;
+            }
+        }
   }
 }

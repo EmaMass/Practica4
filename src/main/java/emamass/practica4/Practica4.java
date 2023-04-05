@@ -11,8 +11,8 @@ package emamass.practica4;
 public class Practica4 {
 
     public static void main(String[] args) {
-        AplicacionDeCartas a;
-        a = new AplicacionDeCartas();
-        a.inicia();
+        AplicacionDeCartas juego;
+        juego = new AplicacionDeCartas();
+        juego.inicia();
     }
 }
