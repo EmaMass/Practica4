@@ -10,7 +10,6 @@ public class AplicacionDeCartas {
  private int respuesta;
  private int ganador;
  private int puntos; 
- private int tempfix;
  private int valorMax;
  private int posicion; 
  ArrayList<Baraja> mazo;
